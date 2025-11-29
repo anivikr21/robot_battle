@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Build-Your-Robot Battle (Turn-Based RPG)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>⚙️ Build-Your-Robot Battle (Turn-Based RPG)</h1>
+  <p style="opacity:0.8; max-width: 720px; font-size:0.9rem;">
+    Build your robot, earn XP, unlock upgrades, and fight in a <strong>turn-based</strong> arena.
+    Choose <strong>Attack</strong>, <strong>Guard</strong>, or a weapon-specific <strong>Special</strong> with status effects.
+  </p>
+
+  <div class="container">
+    <!-- Left: Build Panel -->
+    <div class="panel" id="build-panel">
+      <h2>🛠 Build & Upgrade</h2>
+
+      <div class="section-title">Name</div>
+      <input id="robot-name-input" type="text"
+             placeholder="Enter robot name (optional)"
+             style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:#020617; color:#e5e7eb; font-size:0.9rem;">
+
+      <div class="section-title">Chassis</div>
+      <div class="options-row" id="chassis-options"></div>
+
+      <div class="section-title">Weapon</div>
+      <div class="options-row" id="weapon-options"></div>
+
+      <div class="section-title">Wheels</div>
+      <div class="options-row" id="wheels-options"></div>
+
+      <div class="section-title">Battery</div>
+      <div class="options-row" id="battery-options"></div>
+
+      <div class="section-title">Base Stats</div>
+      <div class="stats-grid">
+        <div class="stat-label">HP (Armor)</div>
+        <div class="stat-value-bar">
+          <div class="bar-bg"><div class="bar-fill" id="stat-hp-bar"></div></div>
+          <span class="stat-number" id="stat-hp-num">0</span>
+        </div>
+
+        <div class="stat-label">Attack</div>
+        <div class="stat-value-bar">
+          <div class="bar-bg"><div class="bar-fill" id="stat-atk-bar"></div></div>
+          <span class="stat-number" id="stat-atk-num">0</span>
+        </div>
+
+        <div class="stat-label">Speed</div>
+        <div class="stat-value-bar">
+          <div class="bar-bg"><div class="bar-fill" id="stat-speed-bar"></div></div>
+          <span class="stat-number" id="stat-speed-num">0</span>
+        </div>
+
+        <div class="stat-label">Energy</div>
+        <div class="stat-value-bar">
+          <div class="bar-bg"><div class="bar-fill" id="stat-energy-bar"></div></div>
+          <span class="stat-number" id="stat-energy-num">0</span>
+        </div>
+      </div>
+
+      <div class="section-title">Progress</div>
+      <div class="progress-row">
+        <span id="xp-label">Level 1 • XP 0 / 4</span>
+        <span id="upgrade-points-label">Upgrade points: 0</span>
+      </div>
+
+      <div class="section-title">Upgrades (Persist Between Battles)</div>
+      <div class="btn-upgrade-row">
+        <button class="btn-upgrade" id="upg-hp">HP +</button>
+        <button class="btn-upgrade" id="upg-atk">ATK +</button>
+        <button class="btn-upgrade" id="upg-speed">SPD +</button>
+        <button class="btn-upgrade" id="upg-energy">ENG +</button>
+      </div>
+
+      <button class="btn-primary" id="start-battle-btn">
+        🚀 Start Battle
+      </button>
+    </div>
+
+    <!-- Right: Battle Panel -->
+    <div class="panel">
+      <h2>⚔️ Arena</h2>
+      <div class="battle-robots">
+        <div class="robot-card" id="player-card">
+          <div class="robot-title-row">
+            <div class="robot-name" id="player-name-label">Your Robot</div>
+            <div class="robot-tag">Player</div>
+          </div>
+          <div class="chips-row" id="player-parts"></div>
+          <div class="robot-summary" id="player-summary"></div>
+          <div class="hp-bar-wrap">
+            <div class="hp-label-row">
+              <span>HP</span>
+              <span id="player-hp-label">0 / 0</span>
+            </div>
+            <div class="hp-bar-bg">
+              <div class="hp-bar-fill" id="player-hp-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="robot-card enemy" id="enemy-card">
+          <div class="robot-title-row">
+            <div class="robot-name" id="enemy-name-label">Enemy Bot</div>
+            <div class="robot-tag">CPU</div>
+          </div>
+          <div class="chips-row" id="enemy-parts"></div>
+          <div class="robot-summary" id="enemy-summary"></div>
+          <div class="hp-bar-wrap">
+            <div class="hp-label-row">
+              <span>HP</span>
+              <span id="enemy-hp-label">0 / 0</span>
+            </div>
+            <div class="hp-bar-bg">
+              <div class="hp-bar-fill" id="enemy-hp-bar"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="turn-indicator" id="turn-indicator">Press "Start Battle" to begin.</div>
+
+      <div class="btn-action-row">
+        <button class="btn-action attack" id="btn-attack" disabled>Attack</button>
+        <button class="btn-action guard" id="btn-guard" disabled>Guard</button>
+        <button class="btn-action special" id="btn-special" disabled>Special</button>
+      </div>
+
+      <div class="battle-log" id="battle-log"></div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
