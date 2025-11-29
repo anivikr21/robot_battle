@@ -37,7 +37,7 @@ const state = {
   xp: 0,
   level: 1,
   upgradePoints: 0,
-  upgrades: { hp: 0, atk: 0, speed: 0, energy: 0 }
+  upgrades: { hp: 0, atk: 0, speed: 0, energy: 0 },
 };
 
 const battleButtons = {
@@ -112,8 +112,15 @@ function computeStats(chassis, weapon, wheels, battery, applyUpgrades) {
   if (speed < 4) speed = 4;
   if (energy < 2) energy = 2;
 
-  const critChance = (weapon.critChance || 0.05) + (speed > 25 ? 0.03 : 0) + (energy > 16 ? 0.02 : 0);
-  const dodgeChance = (speed > 24 ? 0.18 : speed > 18 ? 0.12 : speed > 12 ? 0.07 : 0.03);
+  const critChance =
+    (weapon.critChance || 0.05) +
+    (speed > 25 ? 0.03 : 0) +
+    (energy > 16 ? 0.02 : 0);
+  const dodgeChance =
+    speed > 24 ? 0.18 :
+    speed > 18 ? 0.12 :
+    speed > 12 ? 0.07 :
+    0.03;
 
   return {
     maxHp: hp,
@@ -129,12 +136,18 @@ function computeStats(chassis, weapon, wheels, battery, applyUpgrades) {
     battery,
     guardActive: false,
     specialCooldown: 0,
-    status: { burn: 0, slow: 0, stun: 0 }
+    status: { burn: 0, slow: 0, stun: 0 },
   };
 }
 
 function updateStatsPreview() {
-  const stats = computeStats(state.chassis, state.weapon, state.wheels, state.battery, true);
+  const stats = computeStats(
+    state.chassis,
+    state.weapon,
+    state.wheels,
+    state.battery,
+    true
+  );
   state.playerStats = stats;
 
   const hpNum = document.getElementById('stat-hp-num');
@@ -184,7 +197,7 @@ function updateRobotCardFromStats(prefix, stats) {
     nameLabel.textContent = inputName || 'Your Robot';
   }
 
-  hpLabel.textContent = stats.hp + ' / ' + stats.maxHp;
+  hpLabel.textContent = `${stats.hp} / ${stats.maxHp}`;
   hpBar.style.width = Math.max(0, (stats.hp / stats.maxHp) * 100) + '%';
 
   partsRow.innerHTML = '';
@@ -192,7 +205,7 @@ function updateRobotCardFromStats(prefix, stats) {
     { label: stats.chassis.label, color: '#22c55e' },
     { label: stats.weapon.label, color: '#eab308' },
     { label: stats.wheels.label, color: '#38bdf8' },
-    { label: stats.battery.label, color: '#a855f7' }
+    { label: stats.battery.label, color: '#a855f7' },
   ];
   parts.forEach(p => {
     const pill = document.createElement('div');
@@ -282,15 +295,15 @@ function generateEnemyStats() {
 
   let stats = computeStats(ch, weap, wh, bat, false);
 
-  const hpDelta = (Math.random() * 20) - 10;
+  const hpDelta = Math.random() * 20 - 10;
   stats.maxHp = Math.round(stats.maxHp + hpDelta);
   stats.hp = stats.maxHp;
-  const atkDelta = (Math.random() * 4) - 2;
+  const atkDelta = Math.random() * 4 - 2;
   stats.atk = Math.round(stats.atk + atkDelta);
 
   const archetypes = ['Mk-II', 'Prototype', 'ArenaBot', 'Rival-X', 'Nemesis'];
   const baseNames = ['Shard', 'Thunder', 'Torque', 'Echo', 'Nova', 'Hydra', 'Aegis', 'Pulse'];
-  const name = randomChoice(baseNames) + ' ' + randomChoice(archetypes);
+  const name = `${randomChoice(baseNames)} ${randomChoice(archetypes)}`;
   document.getElementById('enemy-name-label').textContent = name;
 
   return stats;
@@ -300,7 +313,8 @@ function generateEnemyStats() {
 function setActionButtonsEnabled(enabled) {
   battleButtons.attack.disabled = !enabled;
   battleButtons.guard.disabled = !enabled;
-  battleButtons.special.disabled = !enabled || (state.playerStats && state.playerStats.specialCooldown > 0);
+  battleButtons.special.disabled =
+    !enabled || (state.playerStats && state.playerStats.specialCooldown > 0);
 }
 
 function updateTurnIndicator() {
@@ -336,9 +350,10 @@ function checkBattleEnd() {
 }
 
 function applyStartOfTurnStatus(entity, who) {
-  const name = (who === 'player')
-    ? document.getElementById('player-name-label').textContent
-    : document.getElementById('enemy-name-label').textContent;
+  const name =
+    who === 'player'
+      ? document.getElementById('player-name-label').textContent
+      : document.getElementById('enemy-name-label').textContent;
 
   // Burn damage
   if (entity.status.burn > 0) {
@@ -446,7 +461,7 @@ function startBattle() {
   const enemyName = document.getElementById('enemy-name-label').textContent;
   appendLog('Battle start! Robots roll into the arena...', 'system');
   appendLog(`${playerName} vs ${enemyName}`, 'system');
-  appendLog(`-- Turn 1 --`, 'turn');
+  appendLog('-- Turn 1 --', 'turn');
 
   document.getElementById('start-battle-btn').disabled = true;
   setActionButtonsEnabled(false);
@@ -465,7 +480,7 @@ function endBattle(winner) {
   const enemyName = document.getElementById('enemy-name-label').textContent;
 
   if (winner === 'draw') {
-    appendLog('Both robots are immobilized! It\'s a draw!', 'system');
+    appendLog("Both robots are immobilized! It's a draw!", 'system');
     turnIndicatorEl.textContent = 'Draw game – both bots are out!';
   } else if (winner === 'player') {
     appendLog(`${playerName} wins the match!`, 'system');
@@ -495,8 +510,15 @@ function endBattle(winner) {
   updateProgressUI();
 
   if (leveledUp) {
-    appendLog(`Level up! You reached Level ${state.level} and gained an upgrade point!`, 'system');
+    appendLog(
+      `Level up! You reached Level ${state.level} and gained an upgrade point!`,
+      'system'
+    );
   }
+
+  // ✅ Reset your health (and full stats) for the next match
+  updateStatsPreview();               // recomputes state.playerStats with full HP
+  updateRobotCardFromStats('player', state.playerStats);
 }
 
 // --- Actions ---
@@ -520,12 +542,14 @@ function computeDamage(attacker, isSpecial) {
 }
 
 function resolveAttack(attacker, defender, who, isSpecial) {
-  const attackerName = (who === 'player')
-    ? document.getElementById('player-name-label').textContent
-    : document.getElementById('enemy-name-label').textContent;
-  const defenderName = (who === 'player')
-    ? document.getElementById('enemy-name-label').textContent
-    : document.getElementById('player-name-label').textContent;
+  const attackerName =
+    who === 'player'
+      ? document.getElementById('player-name-label').textContent
+      : document.getElementById('enemy-name-label').textContent;
+  const defenderName =
+    who === 'player'
+      ? document.getElementById('enemy-name-label').textContent
+      : document.getElementById('player-name-label').textContent;
 
   // Dodge (slow reduces dodge effectiveness)
   let effectiveDodge = defender.dodgeChance;
@@ -551,9 +575,15 @@ function resolveAttack(attacker, defender, who, isSpecial) {
 
   const typeLabel = isSpecial ? 'SPECIAL' : 'attack';
   if (who === 'player') {
-    appendLog(`${attackerName} uses ${typeLabel} on ${defenderName} for ${dmg} dmg.`, 'player');
+    appendLog(
+      `${attackerName} uses ${typeLabel} on ${defenderName} for ${dmg} dmg.`,
+      'player'
+    );
   } else {
-    appendLog(`${attackerName} uses ${typeLabel} on ${defenderName} for ${dmg} dmg.`, 'enemy');
+    appendLog(
+      `${attackerName} uses ${typeLabel} on ${defenderName} for ${dmg} dmg.`,
+      'enemy'
+    );
   }
   if (isCrit) {
     appendLog('Critical impact! Massive damage dealt!', 'crit');
@@ -565,24 +595,36 @@ function resolveAttack(attacker, defender, who, isSpecial) {
       // Overdrive Spin: huge hit, chance to self-stun
       if (Math.random() < 0.25) {
         attacker.status.stun = Math.max(attacker.status.stun, 1);
-        appendLog(`${attackerName}'s overdrive recoils, leaving it stunned!`, 'system');
+        appendLog(
+          `${attackerName}'s overdrive recoils, leaving it stunned!`,
+          'system'
+        );
       }
     } else if (attacker.weapon.id === 'ram') {
       // Full-Speed Ram: chance to stun defender
       if (Math.random() < 0.5) {
         defender.status.stun = Math.max(defender.status.stun, 1);
-        appendLog(`${defenderName} is stunned by the massive ram!`, 'system');
+        appendLog(
+          `${defenderName} is stunned by the massive ram!`,
+          'system'
+        );
       }
     } else if (attacker.weapon.id === 'launcher') {
       // Explosive Volley: apply burn over time
       defender.status.burn = Math.max(defender.status.burn, 3);
-      appendLog(`${defenderName} is set on fire and will keep taking burn damage!`, 'system');
+      appendLog(
+        `${defenderName} is set on fire and will keep taking burn damage!`,
+        'system'
+      );
     }
 
     // Generic "slow" chance on any devastating special
     if (!defender.status.slow && Math.random() < 0.4) {
       defender.status.slow = 2;
-      appendLog(`${defenderName} is slowed and moves sluggishly!`, 'system');
+      appendLog(
+        `${defenderName} is slowed and moves sluggishly!`,
+        'system'
+      );
     }
   }
 }
@@ -641,7 +683,10 @@ function enemyTurn() {
     resolveAttack(enemy, player, 'enemy', false);
   } else if (action === 'guard') {
     enemy.guardActive = true;
-    appendLog('Enemy raises its guard, preparing to absorb damage.', 'enemy');
+    appendLog(
+      'Enemy raises its guard, preparing to absorb damage.',
+      'enemy'
+    );
   } else if (action === 'special') {
     resolveAttack(enemy, player, 'enemy', true);
     enemy.specialCooldown = 2;
@@ -662,12 +707,17 @@ function enemyTurn() {
 }
 
 // --- Events ---
-document.getElementById('start-battle-btn').addEventListener('click', startBattle);
-document.getElementById('robot-name-input').addEventListener('input', () => {
-  if (state.playerStats) {
-    updateRobotCardFromStats('player', state.playerStats);
-  }
-});
+document
+  .getElementById('start-battle-btn')
+  .addEventListener('click', startBattle);
+
+document
+  .getElementById('robot-name-input')
+  .addEventListener('input', () => {
+    if (state.playerStats) {
+      updateRobotCardFromStats('player', state.playerStats);
+    }
+  });
 
 battleButtons.attack.addEventListener('click', () => playerAction('attack'));
 battleButtons.guard.addEventListener('click', () => playerAction('guard'));
