@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 20px;
   background: #050816;
-  color: #ffffff; /* all text white */
+  color: #ffffff;
 }
 
 h1, h2, h3 {
@@ -57,7 +57,8 @@ h1, h2, h3 {
   cursor: pointer;
   background: rgba(15, 23, 42, 0.9);
   color: #ffffff;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease, border 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease,
+              background 0.15s ease, border 0.15s ease;
 }
 
 .option-btn.selected {
@@ -167,17 +168,16 @@ h1, h2, h3 {
   cursor: pointer;
   background: rgba(15, 23, 42, 0.9);
   color: #ffffff;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease, border 0.15s ease, color 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease,
+              background 0.15s ease, border 0.15s ease, color 0.15s ease;
 }
 
 .btn-action.attack {
   border-color: rgba(248, 113, 113, 0.8);
 }
-
 .btn-action.guard {
   border-color: rgba(52, 211, 153, 0.8);
 }
-
 .btn-action.special {
   border-color: rgba(244, 114, 182, 0.9);
 }
@@ -209,7 +209,8 @@ h1, h2, h3 {
   cursor: pointer;
   background: rgba(15, 23, 42, 0.9);
   color: #ffffff;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease, border 0.15s ease, color 0.15s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease,
+              background 0.15s ease, border 0.15s ease, color 0.15s ease;
 }
 
 .btn-upgrade:hover:not(:disabled) {
@@ -248,7 +249,7 @@ h1, h2, h3 {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .robot-name {
@@ -261,6 +262,16 @@ h1, h2, h3 {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   opacity: 0.75;
+}
+
+/* Robot images */
+.robot-img {
+  width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+  margin: 6px 0 8px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.9);
 }
 
 .hp-bar-wrap {
@@ -309,25 +320,20 @@ h1, h2, h3 {
   margin-bottom: 4px;
 }
 
-/* all log text white now */
-.log-turn {
+/* all log text white */
+.log-turn,
+.log-player,
+.log-enemy,
+.log-system,
+.log-crit,
+.log-miss {
   color: #ffffff;
 }
-.log-player {
-  color: #ffffff;
-}
-.log-enemy {
-  color: #ffffff;
-}
-.log-system {
-  color: #ffffff;
-}
+
 .log-crit {
-  color: #ffffff;
   font-weight: 600;
 }
 .log-miss {
-  color: #ffffff;
   font-style: italic;
 }
 
@@ -349,7 +355,7 @@ h1, h2, h3 {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #22c55e; /* dots can stay colored */
+  background: #22c55e;
 }
 
 .robot-summary {

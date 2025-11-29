@@ -34,7 +34,6 @@
       <div class="section-title">Battery</div>
       <div class="options-row" id="battery-options"></div>
 
-      <!-- ✅ New Difficulty Selector -->
       <div class="section-title">Difficulty</div>
       <select id="difficulty-select"
               style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:#020617; color:#ffffff; font-size:0.9rem;">
@@ -93,13 +92,19 @@
     <div class="panel">
       <h2>⚔️ Arena</h2>
       <div class="battle-robots">
+        <!-- Player card -->
         <div class="robot-card" id="player-card">
           <div class="robot-title-row">
             <div class="robot-name" id="player-name-label">Your Robot</div>
             <div class="robot-tag">Player</div>
           </div>
+
+          <!-- Player image -->
+          <img id="player-img" src="player_robot.png" alt="Player robot" class="robot-img">
+
           <div class="chips-row" id="player-parts"></div>
           <div class="robot-summary" id="player-summary"></div>
+
           <div class="hp-bar-wrap">
             <div class="hp-label-row">
               <span>HP</span>
@@ -111,13 +116,19 @@
           </div>
         </div>
 
+        <!-- Enemy card -->
         <div class="robot-card enemy" id="enemy-card">
           <div class="robot-title-row">
             <div class="robot-name" id="enemy-name-label">Enemy Bot</div>
             <div class="robot-tag">CPU</div>
           </div>
+
+          <!-- Enemy image -->
+          <img id="enemy-img" src="enemy_robot.png" alt="Enemy robot" class="robot-img">
+
           <div class="chips-row" id="enemy-parts"></div>
           <div class="robot-summary" id="enemy-summary"></div>
+
           <div class="hp-bar-wrap">
             <div class="hp-label-row">
               <span>HP</span>
