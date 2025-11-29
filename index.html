@@ -20,7 +20,7 @@
       <div class="section-title">Name</div>
       <input id="robot-name-input" type="text"
              placeholder="Enter robot name (optional)"
-             style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:#020617; color:#e5e7eb; font-size:0.9rem;">
+             style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:#020617; color:#ffffff; font-size:0.9rem;">
 
       <div class="section-title">Chassis</div>
       <div class="options-row" id="chassis-options"></div>
@@ -33,6 +33,15 @@
 
       <div class="section-title">Battery</div>
       <div class="options-row" id="battery-options"></div>
+
+      <!-- ✅ New Difficulty Selector -->
+      <div class="section-title">Difficulty</div>
+      <select id="difficulty-select"
+              style="width:100%; padding:6px 8px; border-radius:8px; border:1px solid rgba(148,163,184,0.7); background:#020617; color:#ffffff; font-size:0.9rem;">
+        <option value="easy">Easy</option>
+        <option value="normal" selected>Normal</option>
+        <option value="hard">Hard</option>
+      </select>
 
       <div class="section-title">Base Stats</div>
       <div class="stats-grid">

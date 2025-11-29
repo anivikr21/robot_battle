@@ -38,6 +38,7 @@ const state = {
   level: 1,
   upgradePoints: 0,
   upgrades: { hp: 0, atk: 0, speed: 0, energy: 0 },
+  difficulty: 'normal',
 };
 
 const battleButtons = {
@@ -52,6 +53,19 @@ const upgradeButtons = {
   speed: document.getElementById('upg-speed'),
   energy: document.getElementById('upg-energy'),
 };
+
+const difficultySelect = document.getElementById('difficulty-select');
+if (difficultySelect) {
+  state.difficulty = difficultySelect.value || 'normal';
+  difficultySelect.addEventListener('change', (e) => {
+    state.difficulty = e.target.value || 'normal';
+  });
+}
+
+// Helper
+function getDifficulty() {
+  return state.difficulty || 'normal';
+}
 
 // --- UI helpers for options ---
 function createOptionButtons(containerId, options, groupKey) {
@@ -295,11 +309,38 @@ function generateEnemyStats() {
 
   let stats = computeStats(ch, weap, wh, bat, false);
 
+  // Random small variance
   const hpDelta = Math.random() * 20 - 10;
   stats.maxHp = Math.round(stats.maxHp + hpDelta);
   stats.hp = stats.maxHp;
   const atkDelta = Math.random() * 4 - 2;
   stats.atk = Math.round(stats.atk + atkDelta);
+
+  // ✅ Difficulty scaling
+  const diff = getDifficulty();
+  let hpMult = 1, atkMult = 1, critBonus = 0, dodgeBonus = 0;
+
+  if (diff === 'easy') {
+    hpMult = 0.85;
+    atkMult = 0.9;
+    critBonus = -0.03;
+    dodgeBonus = -0.03;
+  } else if (diff === 'hard') {
+    hpMult = 1.2;
+    atkMult = 1.15;
+    critBonus = 0.05;
+    dodgeBonus = 0.04;
+  }
+
+  stats.maxHp = Math.round(stats.maxHp * hpMult);
+  if (stats.maxHp < 30) stats.maxHp = 30;
+  stats.hp = stats.maxHp;
+
+  stats.atk = Math.round(stats.atk * atkMult);
+  if (stats.atk < 6) stats.atk = 6;
+
+  stats.critChance = Math.max(0, Math.min(0.5, stats.critChance + critBonus));
+  stats.dodgeChance = Math.max(0, Math.min(0.35, stats.dodgeChance + dodgeBonus));
 
   const archetypes = ['Mk-II', 'Prototype', 'ArenaBot', 'Rival-X', 'Nemesis'];
   const baseNames = ['Shard', 'Thunder', 'Torque', 'Echo', 'Nova', 'Hydra', 'Aegis', 'Pulse'];
@@ -461,6 +502,7 @@ function startBattle() {
   const enemyName = document.getElementById('enemy-name-label').textContent;
   appendLog('Battle start! Robots roll into the arena...', 'system');
   appendLog(`${playerName} vs ${enemyName}`, 'system');
+  appendLog(`Difficulty: ${getDifficulty().toUpperCase()}`, 'system');
   appendLog('-- Turn 1 --', 'turn');
 
   document.getElementById('start-battle-btn').disabled = true;
@@ -670,10 +712,23 @@ function enemyTurn() {
   const player = state.playerStats;
   const enemy = state.enemyStats;
 
+  // Difficulty-based AI behavior
+  const diff = getDifficulty();
+  let specialChance = 0.5;
+  let guardChance = 0.4;
+
+  if (diff === 'easy') {
+    specialChance = 0.35;
+    guardChance = 0.3;
+  } else if (diff === 'hard') {
+    specialChance = 0.65;
+    guardChance = 0.5;
+  }
+
   let action;
-  if (enemy.specialCooldown === 0 && Math.random() < 0.5) {
+  if (enemy.specialCooldown === 0 && Math.random() < specialChance) {
     action = 'special';
-  } else if (enemy.hp < enemy.maxHp * 0.35 && Math.random() < 0.4) {
+  } else if (enemy.hp < enemy.maxHp * 0.35 && Math.random() < guardChance) {
     action = 'guard';
   } else {
     action = 'attack';
